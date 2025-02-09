@@ -9,7 +9,7 @@ from .config import ConfigModel
 
 def load_yaml(file_path: Path) -> Dict[str, Any]:
     """Load YAML file."""
-    with open(file_path, "r") as f:
+    with open(file_path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f) or {}
 
 
@@ -79,5 +79,5 @@ class ConfigBuilder:
             sorted_result = {key: result[key] for key in sorted(result.keys())}
             
             # Write the result
-            with open(out_path, "w") as f:
-                yaml.dump(sorted_result, f, sort_keys=False)
+            with open(out_path, "w", encoding="utf-8") as f:
+                yaml.dump(sorted_result, f, sort_keys=False, allow_unicode=True)
