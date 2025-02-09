@@ -24,15 +24,29 @@ pip install pydantic-config-builder
 Create a configuration file named `pydantic_config_builder.yml` in your project directory:
 
 ```yaml
-# Keys are output file paths
-# Values are lists of source files to merge (glob patterns supported)
+# New format (recommended)
+development:
+  input:
+    - base/*.yaml              # All YAML files in base directory
+    - path/to/base.yaml        # Specific file
+  output:
+    - default.yaml             # Local output
+    - ~/.config/app.yaml       # Global config
+    - build/dev.yaml           # Build output
+
+production:
+  input:
+    - default.yaml             # Use output of another configuration
+    - configs/**/*.yaml        # All YAML files in configs and subdirectories
+    - /path/to/overlay-*.yaml  # All overlay files in specific directory
+  output:
+    - prod.yaml
+    - /etc/app/config.yaml
+
+# Legacy format (still supported)
 default.yaml:
-  - base/*.yaml              # All YAML files in base directory
-  - path/to/base.yaml        # Specific file
-~/path/to/config.yaml:
-  - default.yaml             # Use output of another configuration
-  - configs/**/*.yaml        # All YAML files in configs and subdirectories
-  - /path/to/overlay-*.yaml  # All overlay files in specific directory
+  - base/*.yaml
+  - path/to/base.yaml
 ```
 
 Then run the builder:

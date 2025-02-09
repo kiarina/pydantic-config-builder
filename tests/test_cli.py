@@ -29,7 +29,10 @@ def temp_dir(tmp_path):
     config.write_text(
         yaml.dump(
             {
-                "output.yaml": ["base.yaml"],
+                "test": {
+                    "input": ["base.yaml"],
+                    "output": ["output.yaml"],
+                }
             }
         )
     )

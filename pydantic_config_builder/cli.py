@@ -49,7 +49,23 @@ def main(config: Path | None, verbose: bool) -> None:
 
     # Parse configuration
     try:
-        config_model = ConfigModel(files=config_data)
+        # Convert old format to new format if necessary
+        if not any(
+            isinstance(v, dict) and "input" in v and "output" in v for v in config_data.values()
+        ):
+            # Old format: Convert to new format
+            builds = {}
+            for output_path, input_paths in config_data.items():
+                group_name = str(
+                    Path(output_path).stem
+                )  # Use filename without extension as group name
+                builds[group_name] = {
+                    "input": input_paths,
+                    "output": [output_path],
+                }
+            config_data = builds
+
+        config_model = ConfigModel(builds=config_data)
     except Exception as err:
         raise click.ClickException(f"Invalid configuration format: {err}") from err
 

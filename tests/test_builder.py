@@ -3,7 +3,7 @@ import pytest
 import yaml
 
 from pydantic_config_builder.builder import ConfigBuilder
-from pydantic_config_builder.config import ConfigModel
+from pydantic_config_builder.config import BuildConfig, ConfigModel
 
 
 @pytest.fixture
@@ -40,26 +40,26 @@ def temp_dir(tmp_path):
 
 
 def test_merge_simple(temp_dir):
-    """Test simple merge of two files."""
+    """Test simple merge of two files with multiple outputs."""
     config = ConfigModel(
-        files={
-            str(temp_dir / "output.yaml"): [
-                str(temp_dir / "base.yaml"),
-                str(temp_dir / "overlay.yaml"),
-            ]
+        builds={
+            "test": BuildConfig(
+                input=[
+                    str(temp_dir / "base.yaml"),
+                    str(temp_dir / "overlay.yaml"),
+                ],
+                output=[
+                    str(temp_dir / "output1.yaml"),
+                    str(temp_dir / "output2.yaml"),
+                ],
+            )
         }
     )
 
     builder = ConfigBuilder(config=config, base_dir=temp_dir)
     builder.build_all()
 
-    output_path = temp_dir / "output.yaml"
-    assert output_path.exists()
-
-    with open(output_path) as f:
-        result = yaml.safe_load(f)
-
-    assert result == {
+    expected = {
         "database": {
             "host": "localhost",
             "port": 5433,
@@ -68,14 +68,22 @@ def test_merge_simple(temp_dir):
         "logging": {"level": "info", "format": "json"},
     }
 
+    # Check both output files
+    for output_path in [temp_dir / "output1.yaml", temp_dir / "output2.yaml"]:
+        assert output_path.exists()
+        with open(output_path) as f:
+            result = yaml.safe_load(f)
+        assert result == expected
+
 
 def test_file_not_found(temp_dir):
     """Test error when source file not found."""
     config = ConfigModel(
-        files={
-            str(temp_dir / "output.yaml"): [
-                str(temp_dir / "nonexistent.yaml"),
-            ]
+        builds={
+            "test": BuildConfig(
+                input=[str(temp_dir / "nonexistent.yaml")],
+                output=[str(temp_dir / "output.yaml")],
+            )
         }
     )
 
@@ -99,24 +107,29 @@ def test_build_with_built_config(temp_dir):
 
     # Second config using first as base
     config = ConfigModel(
-        files={
-            str(temp_dir / "second.yaml"): [
-                str(first_output),
-                str(temp_dir / "overlay.yaml"),
-            ]
+        builds={
+            "test": BuildConfig(
+                input=[
+                    str(first_output),
+                    str(temp_dir / "overlay.yaml"),
+                ],
+                output=[
+                    str(temp_dir / "second1.yaml"),
+                    str(temp_dir / "second2.yaml"),
+                ],
+            )
         }
     )
 
     builder = ConfigBuilder(config=config, base_dir=temp_dir)
     builder.build_all()
 
-    output_path = temp_dir / "second.yaml"
-    assert output_path.exists()
-
-    with open(output_path) as f:
-        result = yaml.safe_load(f)
-
-    assert "base" in result
-    assert "first" in result
-    assert "database" in result
-    assert "logging" in result
+    # Check both output files
+    for output_path in [temp_dir / "second1.yaml", temp_dir / "second2.yaml"]:
+        assert output_path.exists()
+        with open(output_path) as f:
+            result = yaml.safe_load(f)
+        assert "base" in result
+        assert "first" in result
+        assert "database" in result
+        assert "logging" in result
