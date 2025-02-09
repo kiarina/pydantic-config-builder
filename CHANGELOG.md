@@ -5,7 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.0] - 2024-03-12
+## [0.2.0] - 2024-02-09
+
+### Added
+- Support for glob patterns in source file paths
+  - `*.yaml` matches all YAML files in current directory
+  - `**/*.yaml` matches all YAML files recursively in subdirectories
+  - Automatic deduplication of matched files
+  - Warning messages for patterns with no matches
+
+## [0.1.0] - 2024-02-09
 
 ### Added
 - Initial release

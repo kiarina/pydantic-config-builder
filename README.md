@@ -25,13 +25,14 @@ Create a configuration file named `pydantic_config_builder.yml` in your project 
 
 ```yaml
 # Keys are output file paths
-# Values are lists of source files to merge
+# Values are lists of source files to merge (glob patterns supported)
 default.yaml:
-  - base.yaml
-  - path/to/base.yaml
+  - base/*.yaml              # All YAML files in base directory
+  - path/to/base.yaml        # Specific file
 ~/path/to/config.yaml:
-  - default.yaml
-  - /path/to/overlay.yaml
+  - default.yaml             # Use output of another configuration
+  - configs/**/*.yaml        # All YAML files in configs and subdirectories
+  - /path/to/overlay-*.yaml  # All overlay files in specific directory
 ```
 
 Then run the builder:
