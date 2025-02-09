@@ -80,4 +80,4 @@ class ConfigBuilder:
             
             # Write the result
             with open(out_path, "w", encoding="utf-8") as f:
-                yaml.dump(sorted_result, f, sort_keys=False, allow_unicode=True)
+                yaml.dump(sorted_result, f, sort_keys=False, allow_unicode=True, width=float("inf"))
