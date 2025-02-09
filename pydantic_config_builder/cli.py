@@ -21,7 +21,13 @@ from .config import ConfigModel
     is_flag=True,
     help="Enable verbose output",
 )
-def main(config: Path | None, verbose: bool) -> None:
+@click.option(
+    "-g",
+    "--group",
+    multiple=True,
+    help="Only build specified groups. Can be used multiple times.",
+)
+def main(config: Path | None, verbose: bool, group: tuple[str]) -> None:
     """Build YAML configurations by merging multiple files."""
     # Use default config file if not specified
     if config is None:
@@ -69,6 +75,15 @@ def main(config: Path | None, verbose: bool) -> None:
     except Exception as err:
         raise click.ClickException(f"Invalid configuration format: {err}") from err
 
+    # Filter groups if specified
+    if group:
+        if verbose:
+            click.echo(f"Filtering groups: {', '.join(group)}")
+        filtered_builds = {k: v for k, v in config_model.builds.items() if k in group}
+        if not filtered_builds:
+            raise click.ClickException(f"None of the specified groups {group} exist in configuration")
+        config_model = ConfigModel(builds=filtered_builds)
+
     # Build configurations
     try:
         builder = ConfigBuilder(
@@ -82,3 +97,7 @@ def main(config: Path | None, verbose: bool) -> None:
 
     if verbose:
         click.echo("Configuration build completed successfully")
+
+
+if __name__ == "__main__":
+    main()
