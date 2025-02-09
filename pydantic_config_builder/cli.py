@@ -81,7 +81,9 @@ def main(config: Path | None, verbose: bool, group: tuple[str]) -> None:
             click.echo(f"Filtering groups: {', '.join(group)}")
         filtered_builds = {k: v for k, v in config_model.builds.items() if k in group}
         if not filtered_builds:
-            raise click.ClickException(f"None of the specified groups {group} exist in configuration")
+            raise click.ClickException(
+                f"None of the specified groups {group} exist in configuration"
+            )
         config_model = ConfigModel(builds=filtered_builds)
 
     # Build configurations

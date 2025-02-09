@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pydantic-config-builder"
-version = "0.4.0"
+version = "0.5.0"
 description = "A tool to build YAML configurations by merging multiple files"
 authors = ["kiarina <kiarinadawa@gmail.com>"]
 license = "MIT"
