@@ -75,6 +75,9 @@ class ConfigBuilder:
             # Create parent directory if it doesn't exist
             out_path.parent.mkdir(parents=True, exist_ok=True)
 
+            # Sort top-level keys while preserving nested order
+            sorted_result = {key: result[key] for key in sorted(result.keys())}
+            
             # Write the result
             with open(out_path, "w") as f:
-                yaml.dump(result, f, sort_keys=False)
+                yaml.dump(sorted_result, f, sort_keys=False)
