@@ -52,3 +52,44 @@ def test_get_resolved_config():
     assert resolved[output_path][0] == base_dir / "base.yaml"
     assert resolved[output_path][1] == Path("/abs/path.yaml")
     assert resolved[output_path][2] == Path.home() / "home.yaml"
+
+
+def test_glob_pattern(tmp_path):
+    """Test glob pattern in source files."""
+    # Create test files
+    (tmp_path / "config-1.yaml").touch()
+    (tmp_path / "config-2.yaml").touch()
+    (tmp_path / "subdir").mkdir()
+    (tmp_path / "subdir/config-3.yaml").touch()
+
+    config = ConfigModel(
+        files={
+            "output.yaml": ["config-*.yaml", "**/config-*.yaml"],
+        }
+    )
+
+    resolved = config.get_resolved_config(tmp_path)
+
+    assert len(resolved) == 1
+    output_path = tmp_path / "output.yaml"
+    assert output_path in resolved
+    assert len(resolved[output_path]) == 3
+    assert resolved[output_path][0] == tmp_path / "config-1.yaml"
+    assert resolved[output_path][1] == tmp_path / "config-2.yaml"
+    assert resolved[output_path][2] == tmp_path / "subdir/config-3.yaml"
+
+
+def test_glob_pattern_no_match(tmp_path):
+    """Test glob pattern with no matching files."""
+    config = ConfigModel(
+        files={
+            "output.yaml": ["nonexistent-*.yaml"],
+        }
+    )
+
+    resolved = config.get_resolved_config(tmp_path)
+
+    assert len(resolved) == 1
+    output_path = tmp_path / "output.yaml"
+    assert output_path in resolved
+    assert len(resolved[output_path]) == 0

@@ -52,6 +52,10 @@ pydantic_config_builder -v
 - Absolute paths (starting with /) are used as is
 - Paths starting with ~ are expanded to the user's home directory
 - Relative paths are resolved relative to the configuration file's directory
+- Glob patterns (*, ?, []) are supported for source files
+  - `*.yaml` matches all YAML files in the current directory
+  - `**/*.yaml` matches all YAML files recursively in subdirectories
+  - If a pattern matches no files, a warning is printed and the pattern is skipped
 
 ### Merging Behavior
 
