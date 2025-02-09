@@ -12,7 +12,10 @@ def natural_sort_key(key: str) -> List[Any]:
     """Convert string into list of string and number chunks for natural sorting.
     Temporarily appends .yaml to the key for sorting purposes."""
     key_with_yaml = f"{key}.yaml"
-    convert = lambda text: int(text) if text.isdigit() else text.lower()
+
+    def convert(text: str) -> Any:
+        return int(text) if text.isdigit() else text.lower()
+
     return [convert(c) for c in re.split("([0-9]+)", key_with_yaml)]
 
 
