@@ -42,7 +42,7 @@ def test_cli_default_config(temp_dir):
     runner = CliRunner()
     with runner.isolated_filesystem():
         # Copy test files to current directory
-        Path("pydantic_config_builder.yml").write_text(
+        Path("pydantic-config-builder.yml").write_text(
             (temp_dir / "pydantic_config_builder.yml").read_text()
         )
         Path("base.yaml").write_text((temp_dir / "base.yaml").read_text())

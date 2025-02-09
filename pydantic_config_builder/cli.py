@@ -8,7 +8,7 @@ from .builder import ConfigBuilder
 from .config import ConfigModel
 
 
-@click.command()
+@click.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.option(
     "-c",
     "--config",
@@ -25,11 +25,16 @@ def main(config: Path | None, verbose: bool) -> None:
     """Build YAML configurations by merging multiple files."""
     # Use default config file if not specified
     if config is None:
-        config = Path("pydantic_config_builder.yml")
-        if not config.exists():
+        # Try both .yaml and .yml extensions
+        for ext in [".yaml", ".yml"]:
+            config = Path(f"pydantic-config-builder{ext}")
+            if config.exists():
+                break
+        else:
             raise click.ClickException(
-                "No configuration file specified and "
-                "pydantic_config_builder.yml not found in current directory"
+                "No configuration file specified and neither "
+                "pydantic-config-builder.yaml nor pydantic-config-builder.yml "
+                "found in current directory"
             )
 
     if verbose:
