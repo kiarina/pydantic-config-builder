@@ -1,10 +1,19 @@
 """YAML configuration builder."""
+import re
 from pathlib import Path
 from typing import Any, Dict, List
 
 import yaml
 
 from .config import ConfigModel
+
+
+def natural_sort_key(key: str) -> List[Any]:
+    """Convert string into list of string and number chunks for natural sorting.
+    Temporarily appends .yaml to the key for sorting purposes."""
+    key_with_yaml = f"{key}.yaml"
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    return [convert(c) for c in re.split('([0-9]+)', key_with_yaml)]
 
 
 def load_yaml(file_path: Path) -> Dict[str, Any]:
@@ -75,8 +84,8 @@ class ConfigBuilder:
             # Create parent directory if it doesn't exist
             out_path.parent.mkdir(parents=True, exist_ok=True)
 
-            # Sort top-level keys while preserving nested order
-            sorted_result = {key: result[key] for key in sorted(result.keys())}
+            # Sort top-level keys naturally while preserving nested order
+            sorted_result = {key: result[key] for key in sorted(result.keys(), key=natural_sort_key)}
             
             # Write the result
             with open(out_path, "w", encoding="utf-8") as f:
