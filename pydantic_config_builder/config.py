@@ -39,7 +39,6 @@ class ConfigModel(BaseModel):
         # globで検索
         matches = glob.glob(abs_pattern, recursive=True)
         if not matches:
-            print(f"Warning: No files found matching pattern: {pattern}")
             return []
         # 重複を排除して返す
         return sorted(set(Path(p) for p in matches))
