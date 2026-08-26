@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Python 3.13 and 3.14
 - Updated development dependencies and required the patched Black 24.3.0 or newer
 - Added dependency auditing and package builds to CI
+- Restricted the GitHub Actions token to read-only repository contents
 
 ## [0.5.1] - 2025-08-07
 
