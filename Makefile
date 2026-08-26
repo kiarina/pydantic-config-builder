@@ -1,4 +1,4 @@
-.PHONY: format lint test clean build publish
+.PHONY: format lint test audit clean build publish
 .DEFAULT_GOAL := build
 
 format:
@@ -6,11 +6,14 @@ format:
 	poetry run isort .
 
 lint:
-	poetry run ruff .
+	poetry run ruff check .
 	poetry run mypy .
 
 test:
 	poetry run pytest --cov=pydantic_config_builder tests/
+
+audit:
+	poetry run pip-audit
 
 clean:
 	rm -rf dist/
@@ -24,7 +27,7 @@ clean:
 	find . -type d -name ".mypy_cache" -exec rm -rf {} +
 	find . -type d -name ".ruff_cache" -exec rm -rf {} +
 
-build: format lint test clean
+build: format lint test audit clean
 	poetry build
 
 publish: build

@@ -1,4 +1,5 @@
 """YAML configuration builder."""
+
 import re
 from pathlib import Path
 from typing import Any, Dict, List

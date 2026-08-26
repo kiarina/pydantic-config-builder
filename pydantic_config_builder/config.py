@@ -1,4 +1,5 @@
 """Configuration model for pydantic-config-builder."""
+
 import glob
 from pathlib import Path
 from typing import Dict, List

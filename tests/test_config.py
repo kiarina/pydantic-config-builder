@@ -1,4 +1,5 @@
 """Tests for ConfigModel."""
+
 from pathlib import Path
 
 from pydantic_config_builder.config import BuildConfig, ConfigModel

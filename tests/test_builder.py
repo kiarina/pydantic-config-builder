@@ -1,4 +1,5 @@
 """Tests for ConfigBuilder."""
+
 import pytest
 import yaml
 

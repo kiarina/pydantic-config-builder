@@ -1,4 +1,5 @@
 """Tests for CLI."""
+
 from pathlib import Path
 
 import pytest
@@ -40,19 +41,16 @@ def temp_dir(tmp_path):
     return tmp_path
 
 
-def test_cli_default_config(temp_dir):
+def test_cli_default_config(temp_dir, monkeypatch):
     """Test CLI with default config file."""
+    (temp_dir / "pydantic-config-builder.yml").write_text(
+        (temp_dir / "pydantic_config_builder.yml").read_text()
+    )
+    monkeypatch.chdir(temp_dir)
     runner = CliRunner()
-    with runner.isolated_filesystem():
-        # Copy test files to current directory
-        Path("pydantic-config-builder.yml").write_text(
-            (temp_dir / "pydantic_config_builder.yml").read_text()
-        )
-        Path("base.yaml").write_text((temp_dir / "base.yaml").read_text())
-
-        result = runner.invoke(main)
-        assert result.exit_code == 0
-        assert Path("output.yaml").exists()
+    result = runner.invoke(main)
+    assert result.exit_code == 0
+    assert Path("output.yaml").exists()
 
 
 def test_cli_custom_config(temp_dir):
@@ -72,13 +70,13 @@ def test_cli_verbose(temp_dir):
     assert "Configuration build completed successfully" in result.output
 
 
-def test_cli_no_config():
+def test_cli_no_config(tmp_path, monkeypatch):
     """Test CLI with no config file."""
+    monkeypatch.chdir(tmp_path)
     runner = CliRunner()
-    with runner.isolated_filesystem():
-        result = runner.invoke(main)
-        assert result.exit_code != 0
-        assert "No configuration file specified" in result.output
+    result = runner.invoke(main)
+    assert result.exit_code != 0
+    assert "No configuration file specified" in result.output
 
 
 def test_cli_invalid_config(temp_dir):

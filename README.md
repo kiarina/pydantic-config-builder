@@ -15,6 +15,8 @@ A tool to build YAML configurations by merging multiple files.
 
 ## Installation
 
+Python 3.13 or newer (before Python 4) is required.
+
 ```bash
 pip install pydantic-config-builder
 ```

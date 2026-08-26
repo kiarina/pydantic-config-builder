@@ -1,4 +1,5 @@
 """Command line interface for pydantic-config-builder."""
+
 from pathlib import Path
 
 import click
