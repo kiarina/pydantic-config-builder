@@ -27,18 +27,18 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
-pydantic = "^2.0.0"
-PyYAML = "^6.0.0"
-click = "^8.0.0"
+pydantic = ">=2.0.0"
+PyYAML = ">=6.0.0"
+click = ">=8.0.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.4.0"
-pytest-cov = "^4.1.0"
-black = "^23.7.0"
-isort = "^5.12.0"
-mypy = "^1.5.0"
-ruff = "^0.0.284"
-types-PyYAML = "^6.0.0"
+pytest = ">=7.4.0"
+pytest-cov = ">=4.1.0"
+black = ">=23.7.0"
+isort = ">=5.12.0"
+mypy = ">=1.5.0"
+ruff = ">=0.0.284"
+types-PyYAML = ">=6.0.0"
 
 [tool.poetry.scripts]
 pydantic_config_builder = "pydantic_config_builder.cli:main"
