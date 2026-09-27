@@ -38,6 +38,30 @@ jobs:
     - name: Build package
       run: poetry build
 
+  minimum-dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v7
+    - name: Install Poetry
+      uses: snok/install-poetry@v1.4.2
+    - name: Set up Python
+      uses: actions/setup-python@v7
+      with:
+        python-version: "3.13"
+    - name: Install uv
+      uses: astral-sh/setup-uv@v10.2.0
+    - name: Build package
+      run: poetry build
+    - name: Install minimum direct dependencies
+      run: |
+        uv venv -p 3.13 .venv-min
+        VIRTUAL_ENV=.venv-min uv pip install --resolution lowest-direct --only-binary :all: \
+          dist/*.whl "pydantic>=2.8.0" "PyYAML>=6.0.2" "click>=8.0.0" "pytest>=8"
+        VIRTUAL_ENV=.venv-min uv pip list
+    - name: Run tests
+      run: .venv-min/bin/python -m pytest tests/
+
   publish:
     needs: test
     runs-on: ubuntu-latest

@@ -25,8 +25,11 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.13,<4.0"
-pydantic = ">=2.0.0"
-PyYAML = ">=6.0.0"
+# First releases publishing CPython 3.13 wheels (pydantic-core has no 3.13
+# wheels before pydantic 2.8.0, PyYAML none before 6.0.2), matching the
+# minimum interpreter this package supports.
+pydantic = ">=2.8.0"
+PyYAML = ">=6.0.2"
 click = ">=8.0.0"
 
 [tool.poetry.group.dev.dependencies]
