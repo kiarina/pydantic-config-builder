@@ -40,6 +40,16 @@ jobs:
 
   minimum-dependencies:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python-version: "3.13"
+            pydantic: "2.8.2"
+            pyyaml: "6.0.2"
+          - python-version: "3.14"
+            pydantic: "2.12.0"
+            pyyaml: "6.0.3"
 
     steps:
     - uses: actions/checkout@v7
@@ -48,16 +58,17 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v7
       with:
-        python-version: "3.13"
+        python-version: ${{ matrix.python-version }}
     - name: Install uv
       uses: astral-sh/setup-uv@v10.3.3
     - name: Build package
       run: poetry build
     - name: Install minimum direct dependencies
       run: |
-        uv venv -p 3.13 .venv-min
+        uv venv -p ${{ matrix.python-version }} .venv-min
         VIRTUAL_ENV=.venv-min uv pip install --resolution lowest-direct --only-binary :all: \
-          dist/*.whl "pydantic>=2.8.0" "PyYAML>=6.0.2" "click>=8.0.0" "pytest>=8"
+          dist/*.whl "pydantic>=${{ matrix.pydantic }}" "PyYAML>=${{ matrix.pyyaml }}" \
+          "click>=8.0.0" "pytest>=8"
         VIRTUAL_ENV=.venv-min uv pip list
     - name: Run tests
       run: .venv-min/bin/python -m pytest tests/

@@ -11,7 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Raised the dependency floors to `pydantic>=2.8.0` and `PyYAML>=6.0.2`, the first
   releases publishing CPython 3.13 wheels; the previous floors could not be installed
   on the supported Python versions
-- Added a CI job that installs the declared minimum dependency versions
+- Set the `pydantic` and `PyYAML` floors per interpreter (`pydantic>=2.8.2` and
+  `PyYAML>=6.0.2` on Python 3.13, `pydantic>=2.12.0` and `PyYAML>=6.0.3` on 3.14), the
+  first releases publishing wheels for each, including macOS arm64
+- Added a CI job that installs the declared minimum dependency versions on Python 3.13
+  and 3.14
 
 ## [0.6.0] - 2026-08-27
 

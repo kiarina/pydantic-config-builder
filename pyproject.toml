@@ -25,11 +25,18 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.13,<4.0"
-# First releases publishing CPython 3.13 wheels (pydantic-core has no 3.13
-# wheels before pydantic 2.8.0, PyYAML none before 6.0.2), matching the
-# minimum interpreter this package supports.
-pydantic = ">=2.8.0"
-PyYAML = ">=6.0.2"
+# Each floor is the first release publishing wheels (including macOS arm64)
+# for that interpreter: pydantic-core has none for 3.13 before pydantic 2.8.2
+# and none for 3.14 before 2.12.0; PyYAML none for 3.13 before 6.0.2 and none
+# for 3.14 before 6.0.3.
+pydantic = [
+    { version = ">=2.8.2", python = "<3.14" },
+    { version = ">=2.12.0", python = ">=3.14" },
+]
+PyYAML = [
+    { version = ">=6.0.2", python = "<3.14" },
+    { version = ">=6.0.3", python = ">=3.14" },
+]
 click = ">=8.0.0"
 
 [tool.poetry.group.dev.dependencies]
